@@ -9,6 +9,9 @@ A premium, dark-mode personal finance mobile app built with React Native and Exp
 - **Spending Summary**: Visualize your spending patterns with category-based progress bars and period filtering (Week, Month, All Time).
 - **Easy Entry**: Fast and intuitive modal for adding both expenses and income with category icons.
 - **Dark Fintech Theme**: A sleek, premium design using the Syne and DM Sans typography.
+- **Interactive Onboarding**: A smooth multi-step onboarding flow to capture user name and preferred currency.
+- **Pixel Blast Background**: A premium, dynamic background animation built with the React Native Animated API for a high-end feel.
+- **Expanded Currencies**: Support for 12 major global currencies with ISO code identification.
 - **Local Persistence**: Your data stays on your device using AsyncStorage.
 
 ## Tech Stack
