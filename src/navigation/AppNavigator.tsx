@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors } from '../constants/theme';
 import { useAppContext } from '../context/AppContext';
@@ -42,13 +43,18 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: colors.income,
         tabBarInactiveTintColor: colors.textMuted,
+        tabBarLabelStyle: {
+          fontFamily: 'DMSans_500Medium',
+          fontSize: 11,
+          marginBottom: 4,
+        },
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
           borderTopWidth: 1,
-          paddingTop: 5,
-          height: 60,
-          paddingBottom: 10,
+          paddingTop: 8,
+          height: Platform.OS === 'web' ? 75 : 85,
+          paddingBottom: Platform.OS === 'web' ? 12 : 25,
         },
         headerStyle: {
           backgroundColor: colors.background,

@@ -14,11 +14,28 @@ A premium, dark-mode personal finance mobile app built with React Native and Exp
 - **Expanded Currencies**: Support for 12 major global currencies with ISO code identification.
 - **Local Persistence**: Your data stays on your device using AsyncStorage.
 
+## App Preview
+
+<div align="center">
+  <img src="./assets/screenshots/Onboarding-1.png" width="32%" />
+  <img src="./assets/screenshots/Home.png" width="32%" />
+  <img src="./assets/screenshots/Summary.png" width="32%" />
+</div>
+
+<br />
+
+<div align="center">
+  <img src="./assets/screenshots/AddTransaction.png" width="24%" />
+  <img src="./assets/screenshots/Transactions.png" width="24%" />
+  <img src="./assets/screenshots/Settings.png" width="24%" />
+  <img src="./assets/screenshots/Onboarding-2.png" width="24%" />
+</div>
+
 ## Tech Stack
 
-- **Framework**: React Native + Expo (SDK 52)
+- **Framework**: React Native + Expo (SDK 54)
 - **Language**: TypeScript
-- **Navigation**: React Navigation v6
+- **Navigation**: React Navigation v7
 - **State Management**: React Context
 - **Storage**: AsyncStorage
 - **Icons**: Expo Vector Icons (MaterialCommunityIcons)

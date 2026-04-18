@@ -28,8 +28,26 @@ export default function App() {
     return null;
   }
 
+  const navTheme = {
+    dark: true,
+    colors: {
+      primary: '#7C6FE0',
+      background: '#0F0F14',
+      card: '#1A1A24',
+      text: '#FFFFFF',
+      border: '#2A2A3C',
+      notification: '#7C6FE0',
+    },
+    fonts: {
+      regular: { fontFamily: 'DMSans_400Regular', fontWeight: '400' as const },
+      medium: { fontFamily: 'DMSans_500Medium', fontWeight: '500' as const },
+      bold: { fontFamily: 'Syne_700Bold', fontWeight: '700' as const },
+      heavy: { fontFamily: 'Syne_700Bold', fontWeight: '900' as const },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={navTheme}>
       <AppProvider>
         <StatusBar style="light" />
         <AppNavigator />

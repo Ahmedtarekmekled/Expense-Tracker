@@ -11,12 +11,14 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, spacing, radius, typography } from '../constants/theme';
 import { useAppContext } from '../context/AppContext';
 
-const { width, height } = Dimensions.get('window');
+
+// Remove static Dimensions since we'll use useWindowDimensions
 const CURRENCIES = [
   { symbol: '$', code: 'USD' },
   { symbol: '€', code: 'EUR' },
@@ -34,14 +36,15 @@ const CURRENCIES = [
 
 // Animated Pixel Background component to simulate the "Pixel Blast" effect in React Native
 const PixelBackground = () => {
-  const pixels = Array.from({ length: 40 }).map(() => ({
+  const { width, height } = useWindowDimensions();
+  const pixels = useRef(Array.from({ length: 40 }).map(() => ({
     id: Math.random().toString(),
     x: Math.random() * width,
     y: Math.random() * height,
     size: Math.random() * 10 + 4,
     opacity: new Animated.Value(0),
     scale: new Animated.Value(0),
-  }));
+  }))).current;
 
   useEffect(() => {
     const animations = pixels.map((p, i) => {
@@ -102,6 +105,7 @@ const PixelBackground = () => {
 };
 
 const OnboardingScreen = () => {
+  const { width } = useWindowDimensions();
   const { updateProfile } = useAppContext();
   const [step, setStep] = useState(0);
   const [name, setName] = useState('');
@@ -129,7 +133,7 @@ const OnboardingScreen = () => {
 
   const renderStep0 = () => (
     <ScrollView 
-      style={styles.stepContainer} 
+      style={[styles.stepContainer, { width }]} 
       contentContainerStyle={styles.stepContent}
       showsVerticalScrollIndicator={false}
     >
@@ -162,7 +166,7 @@ const OnboardingScreen = () => {
 
   const renderStep1 = () => (
     <ScrollView 
-      style={styles.stepContainer} 
+      style={[styles.stepContainer, { width }]} 
       contentContainerStyle={styles.stepContent}
       showsVerticalScrollIndicator={false}
     >
@@ -222,7 +226,10 @@ const OnboardingScreen = () => {
           <Animated.View 
             style={[
               styles.slides, 
-              { transform: [{ translateX: slideAnim }] }
+              { 
+                width: width * 2,
+                transform: [{ translateX: slideAnim }] 
+              }
             ]}
           >
             {renderStep0()}
@@ -238,6 +245,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    width: '100%',
+    ...Platform.select({
+      web: {
+        height: '100vh',
+        overflow: 'hidden',
+      }
+    })
   },
   pixel: {
     position: 'absolute',
@@ -261,11 +275,10 @@ const styles = StyleSheet.create({
   },
   slides: {
     flexDirection: 'row',
-    width: width * 2,
     flex: 1,
   },
   stepContainer: {
-    width: width,
+    // Width set dynamically
   },
   stepContent: {
     padding: spacing.xl,
@@ -334,7 +347,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xxl,
   },
   currencyCard: {
-    width: (width - spacing.xl * 2 - spacing.sm * 3) / 4,
+    width: '22%',
     aspectRatio: 1,
     borderRadius: radius.md,
     backgroundColor: colors.surface,
