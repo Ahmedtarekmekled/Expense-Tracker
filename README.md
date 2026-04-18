@@ -19,7 +19,7 @@ A premium, dark-mode personal finance mobile app built with React Native and Exp
 <div align="center">
   <img src="./assets/screenshots/Onboarding-1.png" width="32%" />
   <img src="./assets/screenshots/Home.png" width="32%" />
-  <img src="./assets/screenshots/Summary.png" width="32%" />
+  <img src="./assets/screenshots/Onboarding-2.png" width="32%" />
 </div>
 
 <br />
@@ -28,7 +28,7 @@ A premium, dark-mode personal finance mobile app built with React Native and Exp
   <img src="./assets/screenshots/AddTransaction.png" width="24%" />
   <img src="./assets/screenshots/Transactions.png" width="24%" />
   <img src="./assets/screenshots/Settings.png" width="24%" />
-  <img src="./assets/screenshots/Onboarding-2.png" width="24%" />
+  <img src="./assets/screenshots/Summary.png" width="24%" />
 </div>
 
 ## Tech Stack
