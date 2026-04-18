@@ -8,7 +8,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [profile, setProfile] = useState<UserProfile>({ name: '', currency: '$' });
+  const [profile, setProfile] = useState<UserProfile>({ name: '', currency: '$', isOnboarded: false });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

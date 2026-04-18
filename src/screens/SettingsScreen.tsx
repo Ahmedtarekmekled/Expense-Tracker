@@ -9,21 +9,38 @@ import {
   SafeAreaView,
   Alert,
 } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { colors, spacing, radius, typography } from '../constants/theme';
 import { useAppContext } from '../context/AppContext';
 
-const CURRENCIES = ['$', '€', '£', '₺', '﷼'];
+const CURRENCIES = [
+  { symbol: '$', code: 'USD' },
+  { symbol: '€', code: 'EUR' },
+  { symbol: '£', code: 'GBP' },
+  { symbol: '¥', code: 'JPY' },
+  { symbol: '₹', code: 'INR' },
+  { symbol: '₪', code: 'ILS' },
+  { symbol: '₺', code: 'TRY' },
+  { symbol: '﷼', code: 'SAR' },
+  { symbol: '₽', code: 'RUB' },
+  { symbol: '₩', code: 'KRW' },
+  { symbol: 'A$', code: 'AUD' },
+  { symbol: 'C$', code: 'CAD' },
+];
 
 const SettingsScreen = () => {
   const { profile, updateProfile } = useAppContext();
   const [name, setName] = useState(profile.name);
   const [currency, setCurrency] = useState(profile.currency);
   const [isSaved, setIsSaved] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const handleSave = async () => {
     try {
-      await updateProfile({ name: name.trim(), currency });
+      await updateProfile({ 
+        ...profile,
+        name: name.trim(), 
+        currency 
+      });
       setIsSaved(true);
       setTimeout(() => setIsSaved(false), 2000);
     } catch (error) {
@@ -33,55 +50,74 @@ const SettingsScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.header}>Settings</Text>
+
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Name</Text>
+          <Text style={styles.label}>Your Name</Text>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              isInputFocused && styles.inputFocused
+            ]}
             value={name}
             onChangeText={setName}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
             placeholder="Enter your name"
             placeholderTextColor={colors.textMuted}
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Currency</Text>
-          <View style={styles.currencyContainer}>
-            {CURRENCIES.map((symbol) => (
-              <TouchableOpacity
-                key={symbol}
-                style={[
-                  styles.currencyPill,
-                  currency === symbol && styles.currencyPillActive,
-                ]}
-                onPress={() => setCurrency(symbol)}
-              >
-                <Text
+          <Text style={styles.label}>Currency</Text>
+          <View style={styles.currencyRow}>
+            {CURRENCIES.map((item) => {
+              const isSelected = currency === item.symbol;
+              return (
+                <TouchableOpacity
+                  key={item.code}
                   style={[
-                    styles.currencyText,
-                    currency === symbol && styles.currencyTextActive,
+                    styles.pill,
+                    isSelected ? styles.pillSelected : styles.pillUnselected
                   ]}
+                  onPress={() => setCurrency(item.symbol)}
+                  activeOpacity={0.7}
                 >
-                  {symbol}
-                </Text>
-              </TouchableOpacity>
-            ))}
+                  <Text style={[
+                    styles.pillText,
+                    isSelected ? styles.pillTextSelected : styles.pillTextUnselected
+                  ]}>
+                    {item.symbol}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <TouchableOpacity 
+          style={styles.debugButton} 
+          onPress={async () => {
+            await updateProfile({ ...profile, isOnboarded: false });
+            Alert.alert('Reset', 'Onboarding has been reset. Please restart the app or reload.');
+          }}
+        >
+          <Text style={styles.debugButtonText}>Reset Onboarding (Debug)</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.saveButton} 
+          onPress={handleSave}
+          activeOpacity={0.8}
+        >
           <Text style={styles.saveButtonText}>
             {isSaved ? 'Saved!' : 'Save Settings'}
           </Text>
         </TouchableOpacity>
-
-        {isSaved && (
-          <View style={styles.toast}>
-            <MaterialCommunityIcons name="check-circle" size={20} color={colors.income} />
-            <Text style={styles.toastText}>Settings updated successfully</Text>
-          </View>
-        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -93,76 +129,92 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    padding: spacing.md,
+    paddingHorizontal: spacing.md,
+  },
+  header: {
+    ...typography.displayMedium,
+    color: colors.text,
+    textAlign: 'left',
+    marginTop: spacing.md,
+    marginBottom: spacing.lg,
   },
   section: {
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
-  sectionTitle: {
+  label: {
     ...typography.labelMedium,
     color: colors.textMuted,
     marginBottom: spacing.sm,
-    textTransform: 'uppercase',
   },
   input: {
-    backgroundColor: colors.surface,
-    padding: spacing.md,
+    height: 52,
     borderRadius: radius.md,
-    color: colors.text,
-    ...typography.bodyLarge,
+    paddingHorizontal: spacing.md,
     borderWidth: 1,
     borderColor: colors.border,
+    backgroundColor: colors.surface,
+    color: colors.text,
+    fontFamily: 'DMSans_400Regular',
+    fontSize: 16,
   },
-  currencyContainer: {
+  inputFocused: {
+    borderColor: colors.income,
+  },
+  currencyRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: spacing.sm,
   },
-  currencyPill: {
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    backgroundColor: colors.surface,
+  pill: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.full,
     borderWidth: 1,
-    borderColor: colors.border,
-    minWidth: 60,
+    minWidth: 52,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  currencyPillActive: {
-    backgroundColor: colors.accent,
-    borderColor: colors.accent,
+  pillUnselected: {
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
   },
-  currencyText: {
-    ...typography.displayMedium,
-    fontSize: 20,
-    color: colors.text,
+  pillSelected: {
+    backgroundColor: 'rgba(46, 207, 168, 0.15)',
+    borderColor: colors.income,
+    borderWidth: 1.5,
   },
-  currencyTextActive: {
-    color: '#FFFFFF',
-    fontFamily: 'Syne_700Bold',
+  pillText: {
+    fontSize: 18,
+    fontFamily: 'DMSans_500Medium',
+  },
+  pillTextUnselected: {
+    color: colors.textMuted,
+  },
+  pillTextSelected: {
+    color: colors.income,
   },
   saveButton: {
-    backgroundColor: colors.accent,
-    paddingVertical: spacing.md,
+    height: 56,
     borderRadius: radius.md,
+    backgroundColor: colors.income,
     alignItems: 'center',
-    marginTop: spacing.lg,
+    justifyContent: 'center',
+    marginTop: spacing.xl,
   },
   saveButtonText: {
     ...typography.bodyLarge,
-    color: '#FFFFFF',
+    color: colors.background,
     fontFamily: 'DMSans_700Bold',
   },
-  toast: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: spacing.lg,
-    gap: spacing.sm,
+  debugButton: {
+    marginTop: spacing.sm,
+    padding: spacing.sm,
+    alignSelf: 'center',
   },
-  toastText: {
-    ...typography.bodyMedium,
-    color: colors.income,
+  debugButtonText: {
+    ...typography.labelMedium,
+    color: colors.textMuted,
+    textDecorationLine: 'underline',
   },
 });
 
